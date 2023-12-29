@@ -1,12 +1,14 @@
 import { Card, Collapse, CollapseProps, List, Spin } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../redux/store';
-import { GET_USER_CHATROOMS } from '../../graphql/queries/GetUserChatrooms';
-import { useMutation, useQuery } from '@apollo/client';
-import { DELETE_CHATROOM } from '../../graphql/mutations/DeleteChatroom';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { useQuery } from '@apollo/client';
+
 import AddChatroom from '../AddChatroom/AddChatroom';
-import { CaretRightOutlined, DeleteOutlined } from '@ant-design/icons';
+
+import { RootState } from '../../redux/store';
 import { setActiveChatroom } from '../../redux/chatroomSlice';
+
+import { GET_USER_CHATROOMS } from '../../graphql/queries/GetUserChatrooms';
 import { Chatroom } from '../../gql/graphql';
 
 const mainCardStyle: React.CSSProperties = {
@@ -28,7 +30,6 @@ const listStyle: React.CSSProperties = {
 
 function ChatroomList() {
   const userId = useSelector((state: RootState) => state.user.id);
-  const activeChatroomId = useSelector((state: RootState) => state.chatroom.activeChatroomId);
   const dispatch = useDispatch();
   const { data, loading } = useQuery(GET_USER_CHATROOMS, {
     fetchPolicy: 'cache-and-network',
@@ -36,38 +37,14 @@ function ChatroomList() {
       userId
     }
   });
-  const [ deleteChatroom ] = useMutation(DELETE_CHATROOM, {
-    variables: {
-      chatroomId: activeChatroomId
-    },
-    refetchQueries: [{
-      query: GET_USER_CHATROOMS,
-      variables: {
-        userId
-      }
-    }]
-  });
 
   const handleSetActiveChatroom = (chatroomId: string) => {    
     dispatch(setActiveChatroom(parseInt(chatroomId)));
   }
 
-  const handleDeleteChatroom = async (chatroomId: string) => {
-    deleteChatroom({
-      variables: {
-        chatroomId: parseInt(chatroomId)
-      },
-      onCompleted: () => {
-        console.log('deleted chatroom');
-      },
-    });
-  }
-
   const collapseStyle: React.CSSProperties = {
     background: '#ffffff',
     borderRadius: 10,
-    // border: 'none',
-    // boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)'
   };
   
   const items: CollapseProps['items'] = [
@@ -88,7 +65,6 @@ function ChatroomList() {
                 {data?.getUserChatrooms.map((chatroom: Chatroom) => (
                     <List.Item key={chatroom.id} style={chatroomItemStyle} onClick={() => {handleSetActiveChatroom(chatroom.id!)}}>
                         {chatroom.name}
-                        <DeleteOutlined onClick={() => handleDeleteChatroom(chatroom.id!)}/>
                     </List.Item>
                 ))}
             </List>

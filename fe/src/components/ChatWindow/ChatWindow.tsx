@@ -1,13 +1,15 @@
 import { Button, Card, Empty, Flex, Input, Space } from 'antd'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { GET_CHATROOM_MESSAGES } from '../../graphql/queries/GetChatroomMessages';
-import { Message } from '../../gql/graphql';
 import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { SendOutlined } from '@ant-design/icons';
+
 import BubbleMessage from '../BubbleMessage/BubbleMessage';
+import { Message } from '../../gql/graphql';
+import { RootState } from '../../redux/store';
+
 import { SEND_MESSAGE } from '../../graphql/mutations/SendMessage';
+import { GET_CHATROOM_MESSAGES } from '../../graphql/queries/GetChatroomMessages';
 import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscriptions/NewMessage';
 
 const mainCardStyle: React.CSSProperties = {
@@ -37,18 +39,18 @@ function ChatWindow() {
     const activeChatroomId = useSelector((state: RootState) => {
         return state.chatroom.activeChatroomId});
     const userId = useSelector((state: RootState) => state.user.id);
-    const { data, loading, error } = useQuery(GET_CHATROOM_MESSAGES, {
+    const { data } = useQuery(GET_CHATROOM_MESSAGES, {
         fetchPolicy: 'network-only',
         variables: {
             chatroomId: activeChatroomId
         }
     });
 
-    const [sendMessage, { data: sendMessageData }] = useMutation(SEND_MESSAGE)
+    const [sendMessage] = useMutation(SEND_MESSAGE)
     const [message, setMessage] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const { data: psData, loading: psLoading, error: psError } = useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
+    const { data: psData } = useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
         variables: {
             chatroomId: activeChatroomId
         }
@@ -85,7 +87,7 @@ function ChatWindow() {
         }
     }, [psData?.newMessage, messages])
 
-    const onPressEnter = (e: any) => {
+    const onPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSendMessage();
         }

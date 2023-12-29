@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
 import React, { useEffect } from 'react'
-import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { RootState } from "../../redux/store";
 
 function ProtectedRoutes({ children }: { children: React.ReactNode }) {
   const userId = useSelector((state: RootState) => state.user.id);

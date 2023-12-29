@@ -44,7 +44,6 @@ import { ChatroomModule } from './chatroom/chatroom.module';
             throw new Error('Token not found!');
           }
           const user = tokenService.validateToken(token);
-          console.log('onConnect', user);
           if (!user) {
             throw new Error('Invalid token!');
           }

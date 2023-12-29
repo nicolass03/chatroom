@@ -1,10 +1,12 @@
-import { Card, List, Spin } from 'antd'
-import { ADD_USER_TO_CHATROOM } from '../../graphql/mutations/AddUserToChatroom'
-import { useMutation, useQuery } from '@apollo/client'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
-import { GET_AVAILABLE_CHATROOMS } from '../../graphql/queries/GetAvailableChatrooms'
+import { useMutation, useQuery } from '@apollo/client'
+import { Card, List, Spin } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
+
+import { ADD_USER_TO_CHATROOM } from '../../graphql/mutations/AddUserToChatroom'
+import { GET_AVAILABLE_CHATROOMS } from '../../graphql/queries/GetAvailableChatrooms'
+
+import { RootState } from '../../redux/store'
 import { Chatroom } from '../../gql/graphql'
 
 const mainCardStyle: React.CSSProperties = {

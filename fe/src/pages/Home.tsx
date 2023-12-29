@@ -1,10 +1,12 @@
+import React from 'react'
 import { Flex, Layout } from 'antd'
 import { Content, Header } from 'antd/es/layout/layout'
-import React from 'react'
+
 import NavBar from '../components/Navbar/NavBar'
 import AvailableChatroomsList from '../components/AvailableChatroomList/AvailableChatroomsList';
 import ChatWindow from '../components/ChatWindow/ChatWindow';
 import ChatroomList from '../components/ChatroomList/ChatroomList';
+import ProtectedRoutes from '../components/ProtectedRoutes/ProtectedRoutes';
 
 const layoutStyle: React.CSSProperties = {
   width: '100vw',
@@ -16,12 +18,9 @@ const layoutStyle: React.CSSProperties = {
 
 const headerStyle: React.CSSProperties = {
   textAlign: 'center',
-  // color: '#fff',
   height: '64px',
-  // paddingInline: ,
   lineHeight: '64px',
   borderRadius: 10,
-  // backgroundColor: '#4096ff',
 };
 
 const contentStyle: React.CSSProperties = {
@@ -29,7 +28,6 @@ const contentStyle: React.CSSProperties = {
   minHeight: 120,
   lineHeight: '120px',
   marginTop: 10,
-  // color: '#fff',
   backgroundColor: 'D5D5D5',
   width: '100%',
   display: 'flex',
@@ -39,18 +37,20 @@ const contentStyle: React.CSSProperties = {
 
 function Home() {
   return (
-    <Flex>
-      <Layout style={layoutStyle}>
-        <Header style={headerStyle}>
-          <NavBar />
-        </Header>
-        <Content style={contentStyle}>
-          <ChatroomList />
-          <ChatWindow />
-          <AvailableChatroomsList />
-        </Content>
-      </Layout>
-    </Flex>
+    <ProtectedRoutes>
+      <Flex>
+        <Layout style={layoutStyle}>
+          <Header style={headerStyle}>
+            <NavBar />
+          </Header>
+          <Content style={contentStyle}>
+            <ChatroomList />
+            <ChatWindow />
+            <AvailableChatroomsList />
+          </Content>
+        </Layout>
+      </Flex>
+    </ProtectedRoutes>
   )
 }
 

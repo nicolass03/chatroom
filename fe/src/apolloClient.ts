@@ -12,39 +12,33 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
+
 import { logout } from './redux/userSlice';
 import { store } from './redux/store';
-
-const MAX_RETRY = 3;
-const REFRESH_TOKEN_ERROR = 'Error when refreshing token'
+import { Constants } from './utils/constants';
+import { REFRESH_TOKEN } from './graphql/mutations/RefreshToken';
 
 loadErrorMessages()
 loadDevMessages()
 
 async function refreshToken(client: ApolloClient<NormalizedCacheObject>) {
     try {
-        const { data } = await client.mutate({
-            mutation: gql`
-                mutation refreshToken {
-                    refreshToken 
-                }
-            `,
-        });
+        const { data } = await client.mutate({ mutation: REFRESH_TOKEN });
 
         const token = data?.refreshToken;
         if (!token) {
-            throw new Error(REFRESH_TOKEN_ERROR);
+            throw new Error(Constants.REFRESH_TOKEN_ERROR);
         }
         return `Bearer ${token}`;
     } catch (error) {
-        throw new Error(REFRESH_TOKEN_ERROR);
+        throw new Error(Constants.REFRESH_TOKEN_ERROR);
     }
 }
 
 let retry = 0;
 
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:3000/graphql`,
+    uri: process.env.GRAPHQL_WEBSOCKET_URL!,
     options: {
         reconnect: true,
         connectionParams: {
@@ -55,11 +49,9 @@ const wsLink = new WebSocketLink({
 
 const errorLink = onError(({ graphQLErrors, operation, forward, networkError }) => {
     if (graphQLErrors) {
-        console.log(graphQLErrors);
-
         for (const err of graphQLErrors!) {
-            if (err.extensions?.code === 'UNAUTHENTICATED') {
-                if (retry < MAX_RETRY) {
+            if (err.extensions?.code === Constants.UNAUTHENTICATED) {
+                if (retry < Constants.MAX_RETRY) {
                     retry++
                     const oldHeaders = operation.getContext().headers;
                     return new Observable(observer => {
@@ -81,7 +73,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward, networkError }) 
                     store.dispatch(logout());
                 }
             }
-            if (err.message === REFRESH_TOKEN_ERROR) {
+            if (err.message === Constants.REFRESH_TOKEN_ERROR) {
                 store.dispatch(logout());
             }
         }
@@ -105,7 +97,7 @@ const link = split(
 export const apolloClient = new ApolloClient({
     cache: new InMemoryCache({}),
     link: ApolloLink.from([link, new HttpLink({
-        uri: 'http://localhost:3000/graphql', credentials: 'include', headers: {
+        uri: process.env.GRAPHQL_URL, credentials: 'include', headers: {
             'Content-Type': 'application/json'
         },
     })])

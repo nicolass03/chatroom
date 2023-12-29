@@ -7,14 +7,14 @@ import './index.css'
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store.ts';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
-import Login from './components/Login/Login.tsx';
+import Login from './components/Login/Auth.tsx';
 import { PersistGate } from 'redux-persist/integration/react';
+import Home from './pages/Home.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
   },
   {
     path: "/login",
@@ -24,7 +24,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <script src="http://localhost:8097"></script>
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
       <ApolloProvider client={apolloClient}>

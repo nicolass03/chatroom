@@ -1,10 +1,12 @@
 import { Resolver, Query, Context, Mutation, Args } from '@nestjs/graphql';
 import { LoginResponse, RegisterResponse } from './auth.type';
 import { LoginDto, RegisterDto } from './auth.dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response, Request } from 'express';
+import { GqlError } from 'src/filters/exception.filter';
 
+@UseFilters(GqlError)
 @Resolver()
 export class AuthResolver {
 
@@ -12,9 +14,7 @@ export class AuthResolver {
 
     @Mutation(() => RegisterResponse)
     async register(@Args('input') input: RegisterDto, @Context() ctx: { res: Response }) {
-        try {
-            console.log(input);
-            
+        try {            
             if (input.password !== input.confirmPassword) {
                 return new BadRequestException('Passwords do not match');
             }

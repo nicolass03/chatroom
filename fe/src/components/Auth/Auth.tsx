@@ -1,5 +1,6 @@
 import { Card, Flex, Tabs } from "antd"
 import { useState } from "react";
+
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 
@@ -38,11 +39,11 @@ function Login() {
 
     return (
         <Flex style={flexStyle}>
-        <Card>
-            <h2>Chatroom App</h2>
-            <Tabs centered tabBarStyle={tabSyle} defaultActiveKey={formType} onChange={(key) => setFormType(key)} items={tabItems}>
-            </Tabs>
-        </Card>
+            <Card>
+                <h2>Chatroom App</h2>
+                <Tabs centered tabBarStyle={tabSyle} defaultActiveKey={formType} onChange={(key) => setFormType(key)} items={tabItems}>
+                </Tabs>
+            </Card>
         </Flex>
     )
 }

@@ -1,12 +1,14 @@
-import { Menu, MenuProps,  } from "antd"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../../redux/store"
-import { useMutation } from "@apollo/client";
-import { LOGOUT } from "../../graphql/mutations/Logout";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../redux/userSlice";
+import { Menu, MenuProps,  } from "antd"
 import { LogoutOutlined } from "@ant-design/icons";
+import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+
+import { RootState } from "../../redux/store"
+import { logout } from "../../redux/userSlice";
 import { clearChatroom } from "../../redux/chatroomSlice";
+
+import { LOGOUT } from "../../graphql/mutations/Logout";
 
 const menuStyle: React.CSSProperties = {
     justifyContent: 'flex-end',
