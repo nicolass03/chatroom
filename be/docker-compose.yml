@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: postgres:10
+    container_name: chatroom_db
+    restart: always
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: chatroom
+      POSTGRES_PASSWORD: chatroom123
+      POSTGRES_DB: chatroom
+    volumes:
+      - ./data:/var/lib/postgresql/data

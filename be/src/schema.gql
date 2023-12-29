@@ -1,0 +1,82 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Chatroom {
+  createdAt: DateTime
+  id: ID
+  messages: [Message!]
+  name: String
+  updatedAt: DateTime
+  users: [User!]
+}
+
+input CreateChatroomDto {
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  user: User
+}
+
+type Message {
+  chatroom: Chatroom
+  createdAt: DateTime
+  id: ID
+  message: String
+  updatedAt: DateTime
+  user: User
+}
+
+type Mutation {
+  addUserToChatroom(chatroomId: Float!, userId: Float!): Chatroom!
+  createChatroom(input: CreateChatroomDto!): Chatroom!
+  deleteChatroom(chatroomId: Float!): String!
+  login(input: LoginDto!): LoginResponse!
+  logout: String!
+  refreshToken: String!
+  register(input: RegisterDto!): RegisterResponse!
+  sendMessage(chatroomId: Float!, message: String!): Message!
+}
+
+type Query {
+  getAvailableChatrooms(userId: Float!): [Chatroom!]!
+  getChatroomMessages(chatroomId: Float!): [Message!]!
+  getUserChatrooms(userId: Float!): [Chatroom!]!
+  hello: String!
+}
+
+input RegisterDto {
+  confirmPassword: String!
+  email: String!
+  password: String!
+  username: String!
+}
+
+type RegisterResponse {
+  user: User
+}
+
+type Subscription {
+  newChatroom: Chatroom
+  newMessage(chatroomId: Float!): Message
+}
+
+type User {
+  createdAt: DateTime
+  email: String!
+  id: Float
+  password: String
+  updatedAt: DateTime
+  username: String!
+}
