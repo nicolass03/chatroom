@@ -9,8 +9,12 @@ A brief description of what this project does and who it's for.
 
 ## Installation
 
-You will need Docker as the database is a postgres docker container. In the /be folder run ``docker-compose up`` to create and run the instance.
-Then use [npm](https://www.npmjs.com/) to install backend and front end. Switch to both folders and run the ``npm install`` command.
+You will need Docker as the database is a postgres docker container. 
+
+- In the /backend folder run ``docker-compose up`` to create and run the instance.
+- Use [npm](https://www.npmjs.com/) to install backend and front end. Switch to both folders and run the ``npm install`` command.
+- In the /backend folder, run ``npx prisma migrate dev init``
+- Now run backend with ``npm run start:dev`` and frontend with ``npm run dev``
 
 ## Usage
 
