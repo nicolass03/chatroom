@@ -2,12 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from './apolloClient.ts'
-// import App from './App.tsx'
 import './index.css'
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store.ts';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Login from './components/Login/Auth.tsx';
+import Login from './components/Auth/Auth.tsx';
 import { PersistGate } from 'redux-persist/integration/react';
 import Home from './pages/Home.tsx';
 
