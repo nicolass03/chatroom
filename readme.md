@@ -25,6 +25,4 @@ You will need Docker as the database is a postgres docker container.
 
 Now, talking about considerations, i decided to add a simple security layer with authentication and multiple chatrooms option to add more complexity to the project.
 
-A the requirement document says i had to use Express, but as this is more of a real-time application, doing some research i would suggest another framework called Fastify, that would suit better in terms of performance.
-
 In the front-end, also used graphql-codegen to generate types from graphql.
