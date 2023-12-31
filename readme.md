@@ -1,6 +1,6 @@
-# Project Title
+# Taxaroo code challenge
 
-A brief description of what this project does and who it's for.
+Repository of the Taxaroo code challenge.
 
 ## Table of Contents
 
