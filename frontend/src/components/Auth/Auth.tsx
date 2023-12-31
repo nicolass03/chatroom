@@ -1,8 +1,11 @@
 import { Card, Flex, Tabs } from "antd"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const flexStyle: React.CSSProperties = {
     width: '100vw',
@@ -21,6 +24,13 @@ const tabSyle: React.CSSProperties = {
 function Login() {
 
     const formTypes = ['login', 'register'];
+    const userId = useSelector((state: RootState) => state.user.id);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(userId) navigate('/')
+    })
+
 
     const [formType, setFormType] = useState(formTypes[0]);
 

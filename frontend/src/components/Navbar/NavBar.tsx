@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import { RootState } from "../../redux/store"
-import { logout } from "../../redux/userSlice";
+import { clearUser } from "../../redux/userSlice";
 import { clearChatroom } from "../../redux/chatroomSlice";
 
 import { LOGOUT } from "../../graphql/mutations/Logout";
@@ -28,7 +28,7 @@ function NavBar() {
     })
     const handleLogout = async () => {
         await logoutUser();
-        dispatch(logout(), clearChatroom());
+        dispatch(clearUser(), clearChatroom());
     }
     const items: MenuProps['items'] = [
         { label: user.username , key: 'user_menu', children: [

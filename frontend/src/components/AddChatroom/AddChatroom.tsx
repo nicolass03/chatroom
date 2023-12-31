@@ -1,24 +1,16 @@
 import { useMutation } from '@apollo/client'
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { Button, Form, Input, Spin, message } from 'antd'
+import { Button, Form, Input, Spin } from 'antd'
 
 import { CREATE_CHATROOM } from '../../graphql/mutations/CreateChatroom'
 import { setActiveChatroom } from '../../redux/chatroomSlice';
+import useErrorMessage from '../../hooks/useErrorMessage';
 
 function AddChatroom() {
 
     const dispatch = useDispatch();
     const [createChatroom, { loading }] = useMutation(CREATE_CHATROOM);
-    const [errors, setErrors] = useState<string>();
-    const [messageApi, context] = message.useMessage();
-
-    useEffect(() => {
-        if (errors) {
-            console.log(errors);
-            messageApi.error(`${errors}`);
-        }
-    }, [errors, messageApi])
+    const {setErrors, context} = useErrorMessage();
 
     const handleCreateChatroom = async (values: { chatroom_name_form: string }) => {
         createChatroom({
@@ -30,7 +22,6 @@ function AddChatroom() {
             },
             onError: (err) => {
                 const gqlError = err.graphQLErrors[0].extensions;
-                console.log(gqlError);
                 if (gqlError?.email) {
                     setErrors(`${gqlError.email}`);
                 } else if (gqlError?.password) {

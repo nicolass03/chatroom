@@ -1,27 +1,18 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Button, Form, Input, Spin, message } from 'antd';
+import { Button, Form, Input, Spin } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 
 import { REGISTER } from '../../../graphql/mutations/Register';
-import { register } from '../../../redux/userSlice';
+import { setUser } from '../../../redux/userSlice';
+import useErrorMessage from '../../../hooks/useErrorMessage';
 
 function RegisterForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<string>('')
     const [registerUser, { loading }] = useMutation(REGISTER);
-    const [messageApi, context] = message.useMessage();
-
-    useEffect(() => {
-        if (errors) {
-            console.log(errors);
-
-            messageApi.error(`${errors}`);
-        }
-    }, [errors, messageApi])
+    const { setErrors, context } = useErrorMessage();
 
     const handleRegister = async (values: { username: string, email: string, password: string, confirmPassword: string }) => {
         setErrors('');
@@ -36,7 +27,7 @@ function RegisterForm() {
                 if (data.register.errors) {
                     setErrors(data.register.errors);
                 }
-                dispatch(register(data.register.user));
+                dispatch(setUser(data.register.user));
                 navigate('/');
             },
             onError: (err) => {
@@ -52,6 +43,8 @@ function RegisterForm() {
                     setErrors(`${gqlError.username}`);
                 } else if (gqlError?.originalError?.message) {
                     setErrors(`${gqlError.originalError.message}`);
+                } else if (gqlError.message) {
+                    setErrors(`${gqlError.message}`);
                 }
             }
         })

@@ -2,7 +2,6 @@ import {
     ApolloClient,
     InMemoryCache,
     NormalizedCacheObject,
-    gql,
     ApolloLink,
     split,
     Observable,
@@ -13,7 +12,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
 import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
 
-import { logout } from './redux/userSlice';
+import { clearUser } from './redux/userSlice';
 import { store } from './redux/store';
 import { Constants } from './utils/constants';
 import { REFRESH_TOKEN } from './graphql/mutations/RefreshToken';
@@ -36,9 +35,6 @@ async function refreshToken(client: ApolloClient<NormalizedCacheObject>) {
 }
 
 let retry = 0;
-
-console.log(import.meta.env.VITE_GRAPHQL_WEBSOCKET_URL);
-
 
 const wsLink = new WebSocketLink({
     uri: import.meta.env.VITE_GRAPHQL_WEBSOCKET_URL!,
@@ -73,11 +69,11 @@ const errorLink = onError(({ graphQLErrors, operation, forward, networkError }) 
                         });
                     });
                 } else {
-                    store.dispatch(logout());
+                    store.dispatch(clearUser());
                 }
             }
             if (err.message === Constants.REFRESH_TOKEN_ERROR) {
-                store.dispatch(logout());
+                store.dispatch(clearUser());
             }
         }
     }

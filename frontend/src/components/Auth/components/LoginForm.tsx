@@ -1,26 +1,18 @@
-import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button, Form, Input, Spin, message } from 'antd'
+import { Button, Form, Input, Spin } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 
 import { LOGIN } from '../../../graphql/mutations/Login';
-import { login } from '../../../redux/userSlice';
+import { setUser } from '../../../redux/userSlice';
+import useErrorMessage from '../../../hooks/useErrorMessage';
 
 function LoginForm() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [mutateLogin, { loading }] = useMutation(LOGIN);
-    const [errors, setErrors] = useState<string>();
-    const [messageApi, context] = message.useMessage();
-
-    useEffect(() => {
-        if (errors) {
-            console.log(errors);
-            messageApi.error(`${errors}`);
-        }
-    }, [errors, messageApi])
+    const { setErrors, context } = useErrorMessage();
 
     interface FormValues {
         email: string;
@@ -34,17 +26,21 @@ function LoginForm() {
                 password: values.password,
             },
             onCompleted: (data) => {
-                dispatch(login(data.login.user));
+                dispatch(setUser(data.login.user));
                 navigate('/');
             },
             onError: (err) => {
                 const gqlError = err.graphQLErrors[0].extensions;
+                console.log(gqlError);
+                
                 if (gqlError?.email) {
                     setErrors(`${gqlError.email!}`);
                 } else if (gqlError?.password) {
                     setErrors(`${gqlError.password!}`);
                 } else if (gqlError?.originalError?.message) {
                     setErrors(`${gqlError.originalError.message}`);
+                } else if (gqlError.message) {
+                    setErrors(`${gqlError.message}`);
                 }
             }
         })
